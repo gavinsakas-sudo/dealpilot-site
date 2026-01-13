@@ -125,21 +125,40 @@
       window.location.href = safeNext();
     });
 
-    document.getElementById("signupBtn").addEventListener("click", async () => {
-      setMsg("Creating account...");
+   document.getElementById("signupBtn").addEventListener("click", async () => {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
 
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value;
+  if (!email || !password) {
+    setMsg("Please enter an email and password.");
+    return;
+  }
 
-      const { error } = await supabase.auth.signUp({ email, password });
-      if (error){
-        setMsg(error.message);
-        return;
-      }
+  setMsg("Creating account...");
 
-      // If email confirmation is OFF, they can usually sign in immediately.
-      setMsg("Account created. Now log in with the same email/password.");
-    });
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password
+  });
+
+  if (error) {
+    setMsg(error.message);
+    return;
+  }
+
+  // SUCCESS STATE
+  document.querySelector(".card").innerHTML = `
+    <h2>Account created</h2>
+    <p class="small">
+      Your account has been created successfully.
+    </p>
+    <p class="small">
+      You can now log in using your email and password.
+    </p>
+    <a href="login.html" class="btn primary">Go to login</a>
+  `;
+});
+
 
     logoutBtn.addEventListener("click", async () => {
       await supabase.auth.signOut();
