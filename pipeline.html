@@ -8,13 +8,14 @@
 </head>
 <body>
 
-<div class="nav">
+<div class="nav" id="siteNav">
   <div class="container">
     <div class="nav-inner">
       <a class="brand" href="index.html">
         <div class="logo"></div>
         <div>DealPilot</div>
       </a>
+      <button class="menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
       <div class="nav-links">
         <a href="analyzer.html">Analyzer</a>
         <a href="pipeline.html" style="color:var(--text); background:rgba(255,255,255,.05);">Pipeline</a>
@@ -230,5 +231,6 @@ deleteBtn.onclick=()=>{
 
 render();
 </script>
+<script src="assets/nav.js"></script>
 </body>
 </html>

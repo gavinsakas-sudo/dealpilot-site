@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="assets/styles.css" />
 </head>
 <body>
-  <div class="nav">
+  <div class="nav" id="siteNav">
     <div class="container">
       <div class="nav-inner">
         <a class="brand" href="index.html">
@@ -15,6 +15,7 @@
           <div>DealPilot</div>
           <div class="badge">MVP</div>
         </a>
+        <button class="menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
         <div class="nav-links">
           <a href="analyzer.html">Analyzer</a>
           <a href="pipeline.html">Pipeline</a>
@@ -102,5 +103,6 @@
   <script>
     document.getElementById("y").textContent = new Date().getFullYear();
   </script>
+  <script src="assets/nav.js"></script>
 </body>
 </html>
