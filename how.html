@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>How It Works | DealPilot</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <div class="nav" id="siteNav">
+    <div class="container">
+      <div class="nav-inner">
+        <a class="brand" href="index.html">
+          <div class="logo"></div>
+          <div>DealPilot</div>
+        </a>
+
+        <button class="menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
+
+        <div class="nav-links">
+          <a href="how-it-works.html">How It Works</a>
+          <a href="tools.html">Tools</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="login.html">Login</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="section">
+    <div class="container" style="max-width: 900px;">
+      <h1 style="margin-bottom:10px;">How DealPilot Works</h1>
+      <p class="lead" style="color:var(--muted); max-width:700px;">
+        A simple workflow for organizing deals, analyzing numbers, and packaging opportunities for buyers.
+      </p>
+    </div>
+  </div>
+
+  <!-- STEPS -->
+  <div class="section">
+    <div class="container" style="max-width: 1000px;">
+
+      <div class="how-grid">
+        <!-- STEP 1 -->
+        <div class="card pad how-step">
+          <div class="how-num">1</div>
+          <h3>Capture the Deal</h3>
+          <p class="small">
+            Enter property details, seller info, and notes into your pipeline. Everything lives in one place.
+          </p>
+          <div class="how-placeholder">
+            (Screenshot / GIF placeholder)
+          </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="card pad how-step">
+          <div class="how-num">2</div>
+          <h3>Analyze the Numbers</h3>
+          <p class="small">
+            Use built-in tools to estimate ARV, repairs, spreads, and buyer-friendly pricing.
+          </p>
+          <div class="how-placeholder">
+            (Screenshot / GIF placeholder)
+          </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="card pad how-step">
+          <div class="how-num">3</div>
+          <h3>Package for Buyers</h3>
+          <p class="small">
+            Generate clean deal summaries and dispo-ready information in minutes, not hours.
+          </p>
+          <div class="how-placeholder">
+            (Screenshot / GIF placeholder)
+          </div>
+        </div>
+
+        <!-- STEP 4 -->
+        <div class="card pad how-step">
+          <div class="how-num">4</div>
+          <h3>Send & Track</h3>
+          <p class="small">
+            Share deals confidently and keep track of progress as you move toward assignment.
+          </p>
+          <div class="how-placeholder">
+            (Screenshot / GIF placeholder)
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="section">
+    <div class="container" style="max-width: 900px;">
+      <div class="card pad" style="text-align:center;">
+        <h2>Built for Active Wholesalers</h2>
+        <p class="small" style="color:var(--muted); max-width:600px; margin:0 auto 16px;">
+          DealPilot is designed to support your process, not replace your judgment.
+        </p>
+        <a href="pricing.html" class="btn primary">View Pricing</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/nav.js"></script>
+
+  <style>
+    .how-grid{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap:16px;
+    }
+
+    @media(max-width: 900px){
+      .how-grid{
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .how-step{
+      position:relative;
+    }
+
+    .how-num{
+      position:absolute;
+      top:12px;
+      right:12px;
+      font-weight:900;
+      font-size:14px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      padding:6px 10px;
+      background:rgba(255,255,255,.04);
+    }
+
+    .how-placeholder{
+      margin-top:14px;
+      border:1px dashed var(--border);
+      border-radius:12px;
+      padding:28px;
+      text-align:center;
+      font-size:12px;
+      color:var(--muted);
+      background:rgba(255,255,255,.02);
+    }
+  </style>
+
+</body>
+</html>
