@@ -27,7 +27,7 @@
 
       <div class="grid3" style="grid-template-columns: 1fr 1fr; gap:14px;">
         <!-- Inputs -->
-        <div class="card pad">
+        <div class="card pad" id="inputsCard">
           <h2 style="margin:0 0 10px; font-size:18px;">Deal Inputs</h2>
           <div class="hr"></div>
 
@@ -115,7 +115,7 @@
         </div>
 
         <!-- Output -->
-        <div class="card pad">
+        <div class="card pad" id="outputCard">
           <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
             <h2 style="margin:0; font-size:18px;">Buyer 1-Pager</h2>
             <div style="display:flex; gap:10px; flex-wrap:wrap;">
@@ -234,6 +234,18 @@
     background: #ffffff !important;
     color: #000000 !important;
     font-size: 12.5px;
+    /* Print: remove left column and make output full-width */
+#inputsCard { display: none !important; }
+
+.grid3 {
+  display: block !important;
+}
+
+#outputCard {
+  width: 100% !important;
+  margin: 0 !important;
+}
+
   }
 
   /* Hide UI */
