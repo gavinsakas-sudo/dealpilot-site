@@ -73,104 +73,99 @@
 
   <script src="assets/nav.js"></script>
 
-  <script>
-    const supabase = window.supabaseClient;
-    const msg = document.getElementById("msg");
-    const loginBtn = document.getElementById("loginBtn");
-    const logoutBtn = document.getElementById("logoutBtn");
+ <script>
+document.addEventListener("DOMContentLoaded", () => {
 
-    function qp(name){
-      return new URLSearchParams(window.location.search).get(name);
-    }
+  const supabase = window.supabaseClient;
+  const msg = document.getElementById("msg");
+  const loginBtn = document.getElementById("loginBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
+  const signupBtn = document.getElementById("signupBtn");
+  const authForm = document.getElementById("authForm");
 
-    function safeNext(){
-      // only allow same-site file redirects (prevents weird open-redirect behavior)
-      const next = qp("next") || "tools.html";
-      if (!/^[a-z0-9\-]+\.html$/i.test(next)) return "tools.html";
-      return next;
-    }
-
-    function setMsg(text){
-      msg.textContent = text || "";
-    }
-
-    async function refreshSessionUI(){
-      const { data } = await supabase.auth.getSession();
-      const session = data.session;
-      if (session){
-        setMsg(`Signed in as ${session.user.email}`);
-        logoutBtn.style.display = "inline-flex";
-        loginBtn.textContent = "Continue";
-      } else {
-        setMsg("Not signed in.");
-        logoutBtn.style.display = "none";
-        loginBtn.textContent = "Log in";
-      }
-    }
-
-    document.getElementById("authForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      setMsg("Signing in...");
-
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value;
-
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error){
-        setMsg(error.message);
-        return;
-      }
-
-      setMsg("Signed in. Redirecting...");
-      window.location.href = safeNext();
-    });
-
-   document.getElementById("signupBtn").addEventListener("click", async () => {
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value;
-
-  if (!email || !password) {
-    setMsg("Please enter an email and password.");
-    return;
+  function qp(name){
+    return new URLSearchParams(window.location.search).get(name);
   }
 
-  setMsg("Creating account...");
+  function safeNext(){
+    const next = qp("next") || "tools.html";
+    if (!/^[a-z0-9\-]+\.html$/i.test(next)) return "tools.html";
+    return next;
+  }
 
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password
+  function setMsg(text){
+    msg.textContent = text || "";
+  }
+
+  async function refreshSessionUI(){
+    const { data } = await supabase.auth.getSession();
+    const session = data.session;
+    if (session){
+      setMsg(`Signed in as ${session.user.email}`);
+      logoutBtn.style.display = "inline-flex";
+      loginBtn.textContent = "Continue";
+    } else {
+      setMsg("");
+      logoutBtn.style.display = "none";
+      loginBtn.textContent = "Log in";
+    }
+  }
+
+  // LOGIN
+  authForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    setMsg("Signing in...");
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error){
+      setMsg(error.message);
+      return;
+    }
+
+    window.location.href = safeNext();
   });
 
-  if (error) {
-    setMsg(error.message);
-    return;
-  }
+  // CREATE ACCOUNT
+  signupBtn.addEventListener("click", async () => {
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
 
-  // SUCCESS STATE
-  document.querySelector(".card").innerHTML = `
-    <h2>Account created</h2>
-    <p class="small">
-      Your account has been created successfully.
-    </p>
-    <p class="small">
-      You can now log in using your email and password.
-    </p>
-    <a href="login.html" class="btn primary">Go to login</a>
-  `;
-});
+    if (!email || !password) {
+      setMsg("Please enter an email and password.");
+      return;
+    }
 
+    setMsg("Creating account...");
 
-    logoutBtn.addEventListener("click", async () => {
-      await supabase.auth.signOut();
-      setMsg("Logged out.");
-      await refreshSessionUI();
-    });
+    const { error } = await supabase.auth.signUp({ email, password });
 
-    // Keep UI consistent if auth state changes
-    supabase.auth.onAuthStateChange(() => refreshSessionUI());
+    if (error) {
+      setMsg(error.message);
+      return;
+    }
 
-    // init
+    document.querySelector(".card").innerHTML = `
+      <h2>Account created</h2>
+      <p class="small">Your account has been created successfully.</p>
+      <p class="small">You can now log in using the same email and password.</p>
+      <a href="login.html" class="btn primary">Go to login</a>
+    `;
+  });
+
+  // LOGOUT
+  logoutBtn.addEventListener("click", async () => {
+    await supabase.auth.signOut();
+    setMsg("Logged out.");
     refreshSessionUI();
-  </script>
+  });
+
+  supabase.auth.onAuthStateChange(() => refreshSessionUI());
+  refreshSessionUI();
+
+});
+</script>
 </body>
 </html>
