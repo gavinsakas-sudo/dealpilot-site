@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pricing | DealPilot</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+  <link rel="icon" href="assets/favicon.ico">
+</head>
+<body>
+  <div class="nav">
+    <div class="container">
+      <div class="nav-inner">
+        <a class="brand" href="index.html">
+          <div class="logo"></div>
+          <div>DealPilot</div>
+        </a>
+        <div class="nav-links">
+          <a href="analyzer.html">Analyzer</a>
+          <a href="pipeline.html">Pipeline</a>
+          <a href="tools.html">Premium Tools</a>
+          <a href="pricing.html" style="color:var(--text); background:rgba(255,255,255,.05);">Pricing</a>
+          <a href="how.html">How It Works</a>
+          <a href="training.html">Free Training</a>
+          <a href="faq.html">FAQ</a>
+          <a class="btn primary" href="#checkout">Join $20</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="container">
+      <h2>Pricing</h2>
+      <p>Start free. Upgrade to Premium when you want smart inputs, pipeline tracking, and the full tool suite.</p>
+
+      <div class="pricing">
+        <!-- FREE -->
+        <div class="card price">
+          <div class="top">
+            <h3>Free</h3>
+            <span class="badge">$0 forever</span>
+          </div>
+          <div class="money">$0 <span>/ month</span></div>
+          <p class="small">Good for manual underwriting and learning your numbers.</p>
+          <div style="height:10px"></div>
+          <a class="btn" href="analyzer.html">Use Free Analyzer</a>
+
+          <ul class="ul">
+            <li><b>Manual deal analyzer</b> (ARV, repairs, MAO, profit)</li>
+            <li>Deal grade + quick notes</li>
+            <li>Export summary (copy/paste)</li>
+            <li class="small">No address autofill, no live comps, no pipeline</li>
+          </ul>
+        </div>
+
+        <!-- PREMIUM -->
+        <div class="card price" id="checkout">
+          <div class="top">
+            <h3>Premium</h3>
+            <span class="badge">Most Popular</span>
+          </div>
+          <div class="money">$20 <span>/ month</span></div>
+          <p class="small">For active wholesalers: faster analysis, better packaging, and repeatable dispo.</p>
+
+          <div style="height:10px"></div>
+          <!-- Replace href with your Stripe Payment Link -->
+          <a class="btn primary" id="upgradeBtn" href="https://YOUR-STRIPE-PAYMENT-LINK" target="_blank" rel="noopener">
+            Upgrade to Premium
+          </a>
+          <div class="small" style="margin-top:8px; color:var(--muted);">
+            Secure checkout via Stripe. Cancel anytime.
+          </div>
+
+          <ul class="ul">
+            <li><b>Smart Mode</b> inputs (address autocomplete + autofill) <span class="small">(Phase 2)</span></li>
+            <li><b>Live comps</b> + quick comp summary <span class="small">(Phase 2)</span></li>
+            <li><b>Pipeline</b> (track leads, offers, statuses)</li>
+            <li>Buyer/dispo utilities (scripts + message generator)</li>
+            <li>Templates pack (contracts, dispo checklist, buyer email)</li>
+            <li>Deal packaging: one-page summary format</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="height:18px"></div>
+
+      <!-- Feature table -->
+      <div class="card pad">
+        <h2 style="margin:0 0 10px">Free vs Premium (Feature Breakdown)</h2>
+        <p class="small" style="margin:0 0 14px">This is the conversion section. Keep it skimmable.</p>
+
+        <div class="hr"></div>
+
+        <div class="grid3" style="grid-template-columns: 1fr 1fr; gap:14px;">
+          <div class="card pad" style="box-shadow:none;">
+            <h3 style="margin:0 0 8px; font-size:15px;">Included Free</h3>
+            <ul class="ul" style="margin:0">
+              <li>Manual analyzer + 70% rule MAO</li>
+              <li>Profit + spread + grade</li>
+              <li>Simple deal summary output</li>
+              <li>Basic education pages</li>
+            </ul>
+          </div>
+
+          <div class="card pad" style="box-shadow:none;">
+            <h3 style="margin:0 0 8px; font-size:15px;">Included Premium</h3>
+            <ul class="ul" style="margin:0">
+              <li>Pipeline tracker</li>
+              <li>Premium tools hub</li>
+              <li>Scripts + templates pack</li>
+              <li>Smart Mode + comps (Phase 2)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="small" style="color:var(--muted); line-height:1.6;">
+          Note: Premium features that rely on third-party property data (autofill/comps) come in Phase 2 when we connect APIs.
+          Everything else can run immediately.
+        </div>
+      </div>
+
+      <div style="height:18px"></div>
+
+      <!-- FAQ mini -->
+      <div class="card pad">
+        <h2 style="margin:0 0 10px">Billing FAQ</h2>
+        <div class="hr"></div>
+        <p class="small"><b>Can I cancel anytime?</b> Yes. Stripe lets you cancel in the customer portal (we’ll add portal link in Phase 2).</p>
+        <p class="small"><b>Do you offer refunds?</b> Decide your policy now. Common: “cancel anytime, no prorated refunds.”</p>
+        <p class="small"><b>Is there a free trial?</b> Optional. If you do, set 7 days in Stripe.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="container">
+      <div class="hr"></div>
+      <div>© <span id="y"></span> DealPilot. Not affiliated with any other company.</div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("y").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

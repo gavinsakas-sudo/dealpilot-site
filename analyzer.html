@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Deal Analyzer | DealPilot</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+  <div class="nav">
+    <div class="container">
+      <div class="nav-inner">
+        <a class="brand" href="index.html"><div class="logo"></div><div>DealPilot</div></a>
+        <div class="nav-links">
+          <a href="analyzer.html">Analyzer</a>
+          <a href="pipeline.html">Pipeline</a>
+          <a href="tools.html">Premium Tools</a>
+          <a href="pricing.html">Pricing</a>
+          <a class="btn primary" href="pricing.html">Join $20</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="container">
+      <h2>Free Deal Analyzer</h2>
+      <p>Manual mode MVP. Enter numbers and get MAO, profit, and a quick grade.</p>
+
+      <div class="card pad">
+        <form id="analyzerForm" class="form" autocomplete="off">
+          <div>
+            <label for="arv">ARV (After Repair Value)</label>
+            <input id="arv" type="number" min="0" placeholder="e.g., 320000" />
+          </div>
+          <div>
+            <label for="repairs">Estimated Repairs</label>
+            <input id="repairs" type="number" min="0" placeholder="e.g., 45000" />
+          </div>
+          <div>
+            <label for="assignment">Assignment Fee</label>
+            <input id="assignment" type="number" min="0" value="10000" />
+          </div>
+          <div>
+            <label for="offer">Your Offer Price</label>
+            <input id="offer" type="number" min="0" placeholder="e.g., 165000" />
+          </div>
+        </form>
+
+        <div class="results">
+          <div class="result">
+            <div class="t">MAO (70% rule)</div>
+            <div class="v" id="maoOut">$0</div>
+            <div class="small">MAO = ARV * 0.70 - Repairs - Assignment</div>
+          </div>
+          <div class="result" id="profitBox">
+            <div class="t">Projected Profit</div>
+            <div class="v" id="profitOut">$0</div>
+            <div class="small">Profit = ARV - Repairs - Offer - Assignment</div>
+          </div>
+          <div class="result">
+            <div class="t">Deal Grade</div>
+            <div class="v" id="gradeOut">D</div>
+            <div class="small">Based on offer vs MAO</div>
+          </div>
+          <div class="result">
+            <div class="t">ARV - Offer Spread</div>
+            <div class="v" id="spreadOut">$0</div>
+            <div class="small">Sanity check metric</div>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+        <div class="small" id="noteOut">Enter an ARV to score the deal.</div>
+      </div>
+
+      <div style="height:14px"></div>
+      <div class="card pad">
+        <h2 style="margin:0 0 8px; font-size:18px">Premium “Smart Mode” (next)</h2>
+        <p class="small" style="margin:0">
+          Add address autocomplete, property autofill, and live comps behind login + subscription.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>
