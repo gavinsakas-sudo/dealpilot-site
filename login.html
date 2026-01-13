@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Login | DealPilot</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+
+  <!-- Supabase JS (CDN) + your client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/supabaseClient.js"></script>
+</head>
+<body>
+
+  <!-- NAV -->
+  <div class="nav" id="siteNav">
+    <div class="container">
+      <div class="nav-inner">
+        <a class="brand" href="index.html">
+          <div class="logo"></div>
+          <div>DealPilot</div>
+        </a>
+
+        <button class="menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
+
+        <div class="nav-links">
+          <a href="how-it-works.html">How It Works</a>
+          <a href="tools.html">Tools</a>
+          <a href="pricing.html">Pricing</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="section">
+    <div class="container" style="max-width: 720px;">
+      <div class="card pad">
+        <h1 style="margin:0 0 6px; font-size:26px;">Login</h1>
+        <p class="small" style="margin:0 0 16px; color:var(--muted); line-height:1.6;">
+          Sign in to access your tools and buyer tracker. If you don’t have an account, create one.
+        </p>
+
+        <form id="authForm" class="form" style="grid-template-columns: 1fr;">
+          <div>
+            <label>Email</label>
+            <input id="email" type="email" required placeholder="you@email.com" autocomplete="email" />
+          </div>
+
+          <div>
+            <label>Password</label>
+            <input id="password" type="password" required placeholder="••••••••" autocomplete="current-password" />
+          </div>
+
+          <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; margin-top:4px;">
+            <button type="button" class="btn" id="signupBtn">Create account</button>
+            <button type="submit" class="btn primary" id="loginBtn">Log in</button>
+          </div>
+        </form>
+
+        <div class="hr"></div>
+
+        <div id="msg" class="small" style="color: var(--muted); line-height:1.6;">
+          <!-- status messages -->
+        </div>
+
+        <div style="margin-top:12px;">
+          <button class="btn" id="logoutBtn" style="display:none;">Log out</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/nav.js"></script>
+
+  <script>
+    const supabase = window.supabaseClient;
+    const msg = document.getElementById("msg");
+    const loginBtn = document.getElementById("loginBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    function qp(name){
+      return new URLSearchParams(window.location.search).get(name);
+    }
+
+    function safeNext(){
+      // only allow same-site file redirects (prevents weird open-redirect behavior)
+      const next = qp("next") || "tools.html";
+      if (!/^[a-z0-9\-]+\.html$/i.test(next)) return "tools.html";
+      return next;
+    }
+
+    function setMsg(text){
+      msg.textContent = text || "";
+    }
+
+    async function refreshSessionUI(){
+      const { data } = await supabase.auth.getSession();
+      const session = data.session;
+      if (session){
+        setMsg(`Signed in as ${session.user.email}`);
+        logoutBtn.style.display = "inline-flex";
+        loginBtn.textContent = "Continue";
+      } else {
+        setMsg("Not signed in.");
+        logoutBtn.style.display = "none";
+        loginBtn.textContent = "Log in";
+      }
+    }
+
+    document.getElementById("authForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      setMsg("Signing in...");
+
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error){
+        setMsg(error.message);
+        return;
+      }
+
+      setMsg("Signed in. Redirecting...");
+      window.location.href = safeNext();
+    });
+
+    document.getElementById("signupBtn").addEventListener("click", async () => {
+      setMsg("Creating account...");
+
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      const { error } = await supabase.auth.signUp({ email, password });
+      if (error){
+        setMsg(error.message);
+        return;
+      }
+
+      // If email confirmation is OFF, they can usually sign in immediately.
+      setMsg("Account created. Now log in with the same email/password.");
+    });
+
+    logoutBtn.addEventListener("click", async () => {
+      await supabase.auth.signOut();
+      setMsg("Logged out.");
+      await refreshSessionUI();
+    });
+
+    // Keep UI consistent if auth state changes
+    supabase.auth.onAuthStateChange(() => refreshSessionUI());
+
+    // init
+    refreshSessionUI();
+  </script>
+</body>
+</html>
