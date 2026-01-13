@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Deal Packager | DealPilot</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+  <div class="nav">
+    <div class="container">
+      <div class="nav-inner">
+        <a class="brand" href="index.html"><div class="logo"></div><div>DealPilot</div></a>
+        <div class="nav-links">
+          <a href="tools.html">← Back to Tools</a>
+          <a href="pipeline.html">Pipeline</a>
+          <a href="pricing.html">Pricing</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="container">
+      <h2>Deal Packager (1-Pager)</h2>
+      <p>Fill once. Copy or print a clean buyer-ready summary.</p>
+
+      <div class="grid3" style="grid-template-columns: 1fr 1fr; gap:14px;">
+        <!-- Inputs -->
+        <div class="card pad">
+          <h2 style="margin:0 0 10px; font-size:18px;">Deal Inputs</h2>
+          <div class="hr"></div>
+
+          <form id="form" class="form" autocomplete="off">
+            <div style="grid-column: 1 / -1;">
+              <label>Property Address</label>
+              <input id="address" required placeholder="123 Main St, City, ST" />
+            </div>
+
+            <div>
+              <label>Beds</label>
+              <input id="beds" type="number" min="0" placeholder="3" />
+            </div>
+            <div>
+              <label>Baths</label>
+              <input id="baths" type="number" min="0" step="0.5" placeholder="2" />
+            </div>
+
+            <div>
+              <label>Sq Ft</label>
+              <input id="sqft" type="number" min="0" placeholder="1400" />
+            </div>
+            <div>
+              <label>Year Built</label>
+              <input id="year" type="number" min="1800" max="2050" placeholder="1958" />
+            </div>
+
+            <div>
+              <label>Asking / Assignment Price</label>
+              <input id="ask" type="number" min="0" placeholder="185000" />
+            </div>
+            <div>
+              <label>ARV (estimate)</label>
+              <input id="arv" type="number" min="0" placeholder="320000" />
+            </div>
+
+            <div>
+              <label>Repairs (estimate)</label>
+              <input id="repairs" type="number" min="0" placeholder="45000" />
+            </div>
+            <div>
+              <label>EMD</label>
+              <input id="emd" type="number" min="0" placeholder="5000" />
+            </div>
+
+            <div style="grid-column: 1 / -1;">
+              <label>Access / Showing</label>
+              <input id="access" placeholder="Lockbox / vacant / appointment only" />
+            </div>
+
+            <div style="grid-column: 1 / -1;">
+              <label>Close timeline</label>
+              <input id="close" placeholder="ASAP / 2–3 weeks / by date" />
+            </div>
+
+            <div style="grid-column: 1 / -1;">
+              <label>Highlights (comma separated)</label>
+              <input id="highlights" placeholder="Corner lot, full basement, newer roof, strong comps" />
+            </div>
+
+            <div style="grid-column: 1 / -1;">
+              <label>Condition notes (optional)</label>
+              <input id="condition" placeholder="Needs kitchen/baths, cosmetic, roof, HVAC, etc." />
+            </div>
+
+            <div style="grid-column: 1 / -1;">
+              <label>Deal notes (optional)</label>
+              <input id="notes" placeholder="Tenant occupied, cash only, assignment of contract, etc." />
+            </div>
+
+            <div>
+              <label>Sender Name</label>
+              <input id="sender" placeholder="Gavin" />
+            </div>
+            <div>
+              <label>Company</label>
+              <input id="company" placeholder="DealPilot / Your LLC" />
+            </div>
+
+            <div style="grid-column: 1 / -1; display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;">
+              <button type="button" class="btn" id="clearBtn">Clear</button>
+              <button type="submit" class="btn primary">Generate</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Output -->
+        <div class="card pad">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
+            <h2 style="margin:0; font-size:18px;">Buyer 1-Pager</h2>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <button class="btn" id="copyBtn">Copy</button>
+              <button class="btn primary" id="printBtn">Print / PDF</button>
+            </div>
+          </div>
+
+          <div class="hr"></div>
+
+          <div id="sheet" class="sheet">
+            <div class="sheet-head">
+              <div>
+                <div class="sheet-title" id="outTitle">Deal Summary</div>
+                <div class="sheet-sub" id="outSub">Generated by DealPilot</div>
+              </div>
+              <div class="sheet-pill" id="outPrice">$0</div>
+            </div>
+
+            <div class="sheet-grid">
+              <div class="box">
+                <div class="k">Property</div>
+                <div class="v" id="outAddress">—</div>
+                <div class="s" id="outMeta">—</div>
+              </div>
+
+              <div class="box">
+                <div class="k">Numbers</div>
+                <div class="v" id="outNumbers">—</div>
+                <div class="s" id="outMath">—</div>
+              </div>
+
+              <div class="box">
+                <div class="k">Access / Close</div>
+                <div class="v" id="outAccess">—</div>
+                <div class="s" id="outClose">—</div>
+              </div>
+
+              <div class="box">
+                <div class="k">Highlights</div>
+                <div class="v" id="outHighlights">—</div>
+                <div class="s" id="outCondition">—</div>
+              </div>
+
+              <div class="box" style="grid-column: 1 / -1;">
+                <div class="k">Notes</div>
+                <div class="v" id="outNotes">—</div>
+                <div class="s" id="outFooter">—</div>
+              </div>
+            </div>
+
+            <div class="sheet-disclaimer">
+              Buyer to perform all due diligence. Information believed reliable but not guaranteed.
+            </div>
+          </div>
+
+          <div class="small" style="margin-top:10px; color:var(--muted); line-height:1.6;">
+            Tip: Keep ARV/repairs clearly labeled as estimates. Don’t promise returns.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .sheet{
+      border:1px solid var(--border);
+      border-radius:18px;
+      background:rgba(255,255,255,.03);
+      padding:14px;
+    }
+    .sheet-head{
+      display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap;
+      padding-bottom:12px; border-bottom:1px solid var(--border);
+    }
+    .sheet-title{font-size:18px; font-weight:850; letter-spacing:-.2px}
+    .sheet-sub{color:var(--muted); font-size:12px; margin-top:4px}
+    .sheet-pill{
+      font-family:var(--mono);
+      border:1px solid var(--border);
+      border-radius:999px;
+      padding:8px 12px;
+      font-weight:800;
+      background:rgba(255,255,255,.04);
+    }
+    .sheet-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+      margin-top:12px;
+    }
+    @media(max-width: 900px){
+      .sheet-grid{grid-template-columns: 1fr;}
+    }
+    .box{
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:12px;
+      background:rgba(11,15,23,.5);
+    }
+    .k{font-family:var(--mono); font-size:12px; color:var(--muted); margin-bottom:6px}
+    .v{font-size:14px; font-weight:800; line-height:1.35}
+    .s{margin-top:6px; font-size:12px; color:var(--muted); line-height:1.5}
+    .sheet-disclaimer{
+      margin-top:12px;
+      font-size:11px;
+      color:var(--muted);
+      border-top:1px solid var(--border);
+      padding-top:10px;
+      line-height:1.5;
+    }
+
+    /* Print styling */
+    @media print{
+      body{background:#fff !important; color:#000 !important}
+      .nav, form, #copyBtn, #printBtn, .small, p, h2 { display:none !important; }
+      .section{padding:0 !important}
+      .container{max-width: none !important; padding: 0 !important}
+      .card{box-shadow:none !important; border:none !important}
+      .sheet{border:1px solid #ddd !important; background:#fff !important}
+      .box{background:#fff !important}
+    }
+  </style>
+
+  <script>
+    const KEY = "dealpilot_packager_v1";
+    const $ = (s)=>document.querySelector(s);
+
+    const els = {
+      form: $("#form"),
+      clearBtn: $("#clearBtn"),
+      copyBtn: $("#copyBtn"),
+      printBtn: $("#printBtn"),
+
+      address: $("#address"),
+      beds: $("#beds"),
+      baths: $("#baths"),
+      sqft: $("#sqft"),
+      year: $("#year"),
+      ask: $("#ask"),
+      arv: $("#arv"),
+      repairs: $("#repairs"),
+      emd: $("#emd"),
+      access: $("#access"),
+      close: $("#close"),
+      highlights: $("#highlights"),
+      condition: $("#condition"),
+      notes: $("#notes"),
+      sender: $("#sender"),
+      company: $("#company"),
+
+      outTitle: $("#outTitle"),
+      outSub: $("#outSub"),
+      outPrice: $("#outPrice"),
+      outAddress: $("#outAddress"),
+      outMeta: $("#outMeta"),
+      outNumbers: $("#outNumbers"),
+      outMath: $("#outMath"),
+      outAccess: $("#outAccess"),
+      outClose: $("#outClose"),
+      outHighlights: $("#outHighlights"),
+      outCondition: $("#outCondition"),
+      outNotes: $("#outNotes"),
+      outFooter: $("#outFooter")
+    };
+
+    function money(n){
+      const x = Number(n);
+      if (!isFinite(x) || x === 0) return "";
+      return x.toLocaleString(undefined, {style:"currency", currency:"USD", maximumFractionDigits:0});
+    }
+    function clean(s){ return String(s||"").trim(); }
+
+    function saveDraft(){
+      const d = {};
+      ["address","beds","baths","sqft","year","ask","arv","repairs","emd","access","close","highlights","condition","notes","sender","company"]
+        .forEach(k => d[k] = els[k].value);
+      localStorage.setItem(KEY, JSON.stringify(d));
+    }
+
+    function loadDraft(){
+      try{
+        const raw = localStorage.getItem(KEY);
+        if(!raw) return;
+        const d = JSON.parse(raw);
+        for(const k in d){
+          if (els[k]) els[k].value = d[k];
+        }
+      } catch {}
+    }
+
+    function build(){
+      const address = clean(els.address.value) || "—";
+      const beds = clean(els.beds.value);
+      const baths = clean(els.baths.value);
+      const sqft = clean(els.sqft.value);
+      const year = clean(els.year.value);
+
+      const ask = money(els.ask.value);
+      const arv = money(els.arv.value);
+      const repairs = money(els.repairs.value);
+      const emd = money(els.emd.value);
+
+      const access = clean(els.access.value);
+      const close = clean(els.close.value);
+
+      const highlightsArr = clean(els.highlights.value).split(",").map(x=>x.trim()).filter(Boolean);
+      const condition = clean(els.condition.value);
+      const notes = clean(els.notes.value);
+
+      const sender = clean(els.sender.value);
+      const company = clean(els.company.value);
+
+      const meta = [
+        beds ? `${beds} bd` : "",
+        baths ? `${baths} ba` : "",
+        sqft ? `${Number(sqft).toLocaleString()} sqft` : "",
+        year ? `Built ${year}` : ""
+      ].filter(Boolean).join(" • ");
+
+      const nums = [
+        ask ? `Asking (assignment): ${ask}` : "",
+        arv ? `ARV (est): ${arv}` : "",
+        repairs ? `Repairs (est): ${repairs}` : "",
+        emd ? `EMD: ${emd}` : ""
+      ].filter(Boolean).join("\n");
+
+      // rough math (optional display)
+      const arvNum = Number(els.arv.value) || 0;
+      const repairsNum = Number(els.repairs.value) || 0;
+      const askNum = Number(els.ask.value) || 0;
+      const profit = arvNum && askNum ? (arvNum - repairsNum - askNum) : 0;
+
+      const math = [];
+      if (arvNum) math.push(`Spread: ${money(arvNum - askNum) || "—"}`);
+      if (profit) math.push(`Rough profit (buyer): ${money(profit)}`);
+      if (arvNum) math.push(`70% rule MAO (buyer): ${money(arvNum*0.70 - repairsNum)}`);
+
+      els.outTitle.textContent = "Deal Summary";
+      els.outSub.textContent = `Generated by DealPilot${sender ? " • " + sender : ""}${company ? " • " + company : ""}`;
+      els.outPrice.textContent = ask || "Asking —";
+
+      els.outAddress.textContent = address;
+      els.outMeta.textContent = meta || "—";
+
+      els.outNumbers.textContent = nums || "—";
+      els.outMath.textContent = math.length ? math.join(" • ") : "—";
+
+      els.outAccess.textContent = access || "—";
+      els.outClose.textContent = close || "—";
+
+      els.outHighlights.textContent = highlightsArr.length ? highlightsArr.join(", ") : "—";
+      els.outCondition.textContent = condition ? `Condition: ${condition}` : "—";
+
+      els.outNotes.textContent = notes || "—";
+      els.outFooter.textContent = sender || company ? `Contact: ${[sender, company].filter(Boolean).join(" • ")}` : "—";
+    }
+
+    function exportText(){
+      const lines = [
+        `DEAL SUMMARY`,
+        `${els.outAddress.textContent}`,
+        `${els.outMeta.textContent}`,
+        ``,
+        `NUMBERS`,
+        `${els.outNumbers.textContent}`,
+        `${els.outMath.textContent !== "—" ? els.outMath.textContent : ""}`,
+        ``,
+        `ACCESS / CLOSE`,
+        `Access: ${els.outAccess.textContent}`,
+        `Close: ${els.outClose.textContent}`,
+        ``,
+        `HIGHLIGHTS`,
+        `${els.outHighlights.textContent}`,
+        `${els.outCondition.textContent !== "—" ? els.outCondition.textContent : ""}`,
+        ``,
+        `NOTES`,
+        `${els.outNotes.textContent}`,
+        ``,
+        `Buyer to perform all due diligence. Info believed reliable but not guaranteed.`
+      ].filter(x => x !== "");
+      return lines.join("\n");
+    }
+
+    els.form.addEventListener("submit", (e)=>{
+      e.preventDefault();
+      build();
+      saveDraft();
+      document.getElementById("sheet").scrollIntoView({behavior:"smooth", block:"start"});
+    });
+
+    els.form.addEventListener("input", saveDraft);
+
+    els.clearBtn.addEventListener("click", ()=>{
+      if(!confirm("Clear inputs?")) return;
+      localStorage.removeItem(KEY);
+      els.form.reset();
+      build();
+    });
+
+    els.copyBtn.addEventListener("click", async ()=>{
+      try{
+        await navigator.clipboard.writeText(exportText());
+        const old = els.copyBtn.textContent;
+        els.copyBtn.textContent = "Copied";
+        setTimeout(()=>els.copyBtn.textContent = old, 900);
+      } catch {
+        alert("Copy failed. Select and copy manually.");
+      }
+    });
+
+    els.printBtn.addEventListener("click", ()=> window.print());
+
+    // init
+    loadDraft();
+    build();
+  </script>
+</body>
+</html>
