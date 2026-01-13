@@ -1,6 +1,11 @@
 // assets/supabaseClient.js
-const SUPABASE_URL = "PASTE_YOUR_PROJECT_URL";
-const SUPABASE_ANON_KEY = "PASTE_YOUR_ANON_PUBLIC_KEY";
 
-const supabase = window.supabase.createClient(sb_publishable_HO9nAtZvN2wBonVzLgIJKw_d1b--G68, sb_secret_IM7lLwCjrKRpVtEgn4vO4A_VBzQliT3);
+const SUPABASE_URL = "https://pkrtksnqrocoqrknfypa.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBrcnRrc25xcm9jb3Fya25meXBhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgzMzM4OTYsImV4cCI6MjA4MzkwOTg5Nn0.t8_u58yFVWoSFEAscjhRqLsB19Z_gU4w5KtoSq-KUaw";
+
+const supabase = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
+
 window.supabaseClient = supabase;
