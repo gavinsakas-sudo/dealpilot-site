@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Repair Estimator | DealPilot</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+  <div class="nav">
+    <div class="container">
+      <div class="nav-inner">
+        <a class="brand" href="index.html"><div class="logo"></div><div>DealPilot</div></a>
+        <div class="nav-links">
+          <a href="tools.html">← Back to Tools</a>
+          <a href="pipeline.html">Pipeline</a>
+          <a href="pricing.html">Pricing</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="container">
+      <h2>Repair Estimator (Quick)</h2>
+      <p>Rule-of-thumb rehab range based on sqft, condition, and major systems. Not a contractor bid.</p>
+
+      <div class="grid3" style="grid-template-columns: 1fr 1fr; gap:14px;">
+        <!-- Inputs -->
+        <div class="card pad" id="inputsCard">
+          <h2 style="margin:0 0 10px; font-size:18px;">Inputs</h2>
+          <div class="hr"></div>
+
+          <form id="form" class="form" autocomplete="off">
+            <div>
+              <label>Sq Ft</label>
+              <input id="sqft" type="number" min="200" placeholder="1400" required />
+            </div>
+
+            <div>
+              <label>Condition</label>
+              <select id="condition">
+                <option value="light">Light (paint/floors/cosmetic)</option>
+                <option value="medium" selected>Medium (kitchen/bath updates)</option>
+                <option value="heavy">Heavy (full rehab / dated systems)</option>
+                <option value="gut">Gut (major systems + layout)</option>
+              </select>
+            </div>
+
+            <div style="grid-column: 1 / -1;">
+              <label>Finish Level</label>
+              <select id="finish">
+                <option value="basic" selected>Basic (rental/entry)</option>
+                <option value="standard">Standard (average flip)</option>
+                <option value="high">High (retail / premium)</option>
+              </select>
+            </div>
+
+            <div style="grid-column: 1 / -1;">
+              <label>Major Systems (toggle what applies)</label>
+              <div class="checks">
+                <label class="chk"><input type="checkbox" id="roof"> Roof</label>
+                <label class="chk"><input type="checkbox" id="hvac"> HVAC</label>
+                <label class="chk"><input type="checkbox" id="plumbing"> Plumbing</label>
+                <label class="chk"><input type="checkbox" id="electrical"> Electrical</label>
+                <label class="chk"><input type="checkbox" id="windows"> Windows</label>
+                <label class="chk"><input type="checkbox" id="foundation"> Foundation</label>
+              </div>
+              <div class="small" style="margin-top:8px; color:var(--muted);">
+                These add lump-sum allowances on top of per-sqft rehab.
+              </div>
+            </div>
+
+            <div style="grid-column: 1 / -1;">
+              <label>Bathrooms</label>
+              <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                <div style="flex:1; min-width:160px;">
+                  <label class="small" style="color:var(--muted);"># Full baths</label>
+                  <input id="fullBaths" type="number" min="0" value="1" />
+                </div>
+                <div style="flex:1; min-width:160px;">
+                  <label class="small" style="color:var(--muted);"># Half baths</label>
+                  <input id="halfBaths" type="number" min="0" value="0" />
+                </div>
+              </div>
+            </div>
+
+            <div style="grid-column: 1 / -1;">
+              <label>Kitchen scope</label>
+              <select id="kitchen">
+                <option value="none">None / already good</option>
+                <option value="refresh" selected>Refresh (paint, counters, minor)</option>
+                <option value="full">Full replace (cabs, tops, appliances)</option>
+              </select>
+            </div>
+
+            <div style="grid-column: 1 / -1;">
+              <label>Notes (optional)</label>
+              <input id="notes" placeholder="e.g., water damage in basement, knob-and-tube, etc." />
+            </div>
+
+            <div style="grid-column: 1 / -1; display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;">
+              <button type="button" class="btn" id="clearBtn">Clear</button>
+              <button type="submit" class="btn primary">Estimate</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Outputs -->
+        <div class="card pad" id="outputCard">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
+            <h2 style="margin:0; font-size:18px;">Estimate</h2>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <button class="btn" id="copyBtn">Copy</button>
+              <button class="btn primary" id="printBtn">Print / PDF</button>
+            </div>
+          </div>
+          <div class="hr"></div>
+
+          <div class="sheet" id="sheet">
+            <div class="sheet-head">
+              <div>
+                <div class="sheet-title">Repair Estimate</div>
+                <div class="sheet-sub" id="subtitle">—</div>
+              </div>
+              <div class="sheet-pill" id="rangeOut">$0 – $0</div>
+            </div>
+
+            <div class="sheet-grid">
+              <div class="box">
+                <div class="k">Base rehab (per sqft)</div>
+                <div class="v" id="baseOut">—</div>
+                <div class="s" id="psfOut">—</div>
+              </div>
+
+              <div class="box">
+                <div class="k">Add-ons (allowances)</div>
+                <div class="v" id="addonsOut">—</div>
+                <div class="s" id="addonsList">—</div>
+              </div>
+
+              <div class="box">
+                <div class="k">Baths + kitchen</div>
+                <div class="v" id="roomsOut">—</div>
+                <div class="s" id="roomsDetail">—</div>
+              </div>
+
+              <div class="box">
+                <div class="k">Contingency</div>
+                <div class="v" id="contOut">—</div>
+                <div class="s" id="contDetail">—</div>
+              </div>
+
+              <div class="box" style="grid-column: 1 / -1;">
+                <div class="k">Notes</div>
+                <div class="v" id="notesOut">—</div>
+                <div class="s">Rule-of-thumb estimate. Always verify with contractors.</div>
+              </div>
+            </div>
+
+            <div class="sheet-disclaimer">
+              This tool provides a rough range for underwriting. Local labor/material prices vary widely.
+            </div>
+          </div>
+
+          <div class="small" style="margin-top:10px; color:var(--muted); line-height:1.6;">
+            This is intentionally conservative for wholesaling. You can tune the allowances later.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .checks{display:flex; flex-wrap:wrap; gap:10px; margin-top:8px}
+    .chk{display:flex; align-items:center; gap:8px; border:1px solid var(--border); padding:8px 10px; border-radius:12px; background:rgba(255,255,255,.03); color:var(--text); font-size:13px}
+    .chk input{transform: translateY(1px)}
+    .sheet{
+      border:1px solid var(--border);
+      border-radius:18px;
+      background:rgba(255,255,255,.03);
+      padding:14px;
+    }
+    .sheet-head{
+      display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap;
+      padding-bottom:12px; border-bottom:1px solid var(--border);
+    }
+    .sheet-title{font-size:18px; font-weight:900; letter-spacing:-.2px}
+    .sheet-sub{color:rgba(255,255,255,.7); font-size:12px; margin-top:4px}
+    .sheet-pill{
+      font-family:var(--mono);
+      border:1px solid var(--border);
+      border-radius:999px;
+      padding:8px 12px;
+      font-weight:900;
+      background:rgba(255,255,255,.04);
+    }
+    .sheet-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px}
+    @media(max-width: 900px){ .sheet-grid{grid-template-columns:1fr;} }
+    .box{border:1px solid var(--border); border-radius:14px; padding:12px; background:rgba(11,15,23,.5)}
+    .k{font-family:var(--mono); font-size:12px; color:rgba(255,255,255,.65); margin-bottom:6px}
+    .v{font-size:14px; font-weight:900; line-height:1.35}
+    .s{margin-top:6px; font-size:12px; color:rgba(255,255,255,.75); line-height:1.5}
+    .sheet-disclaimer{margin-top:12px; font-size:11px; color:rgba(255,255,255,.7); border-top:1px solid var(--border); padding-top:10px; line-height:1.5}
+
+    @media print {
+      html, body { background:#fff !important; color:#000 !important; }
+      .nav, form, #copyBtn, #printBtn, .small, p, h2 { display:none !important; }
+      #inputsCard { display:none !important; }
+      .grid3 { display:block !important; }
+      #outputCard { width:100% !important; margin:0 !important; }
+      .section { padding:0 !important; }
+      .container { max-width:none !important; padding:0 !important; }
+      .card { border:none !important; padding:0 !important; box-shadow:none !important; }
+      .sheet { border:none !important; background:#fff !important; padding:24px !important; min-height:100vh; }
+      .box { background:#fff !important; border:1px solid #ccc !important; }
+      .sheet-title, .v { color:#000 !important; }
+      .k, .s, .sheet-sub, .sheet-disclaimer { color:#222 !important; opacity:1 !important; }
+      .sheet-pill { color:#000 !important; border:1px solid #000 !important; background:#fff !important; }
+    }
+  </style>
+
+  <script>
+    const KEY="dealpilot_repairs_v1";
+    const $ = (s)=>document.querySelector(s);
+    const sup = (id)=>document.getElementById(id);
+
+    const els = {
+      form: $("#form"),
+      clearBtn: $("#clearBtn"),
+      copyBtn: $("#copyBtn"),
+      printBtn: $("#printBtn"),
+
+      sqft: $("#sqft"),
+      condition: $("#condition"),
+      finish: $("#finish"),
+      roof: sup("roof"),
+      hvac: sup("hvac"),
+      plumbing: sup("plumbing"),
+      electrical: sup("electrical"),
+      windows: sup("windows"),
+      foundation: sup("foundation"),
+      fullBaths: $("#fullBaths"),
+      halfBaths: $("#halfBaths"),
+      kitchen: $("#kitchen"),
+      notes: $("#notes"),
+
+      subtitle: $("#subtitle"),
+      rangeOut: $("#rangeOut"),
+      baseOut: $("#baseOut"),
+      psfOut: $("#psfOut"),
+      addonsOut: $("#addonsOut"),
+      addonsList: $("#addonsList"),
+      roomsOut: $("#roomsOut"),
+      roomsDetail: $("#roomsDetail"),
+      contOut: $("#contOut"),
+      contDetail: $("#contDetail"),
+      notesOut: $("#notesOut")
+    };
+
+    function money(n){
+      const x = Number(n);
+      if(!isFinite(x)) return "$0";
+      return x.toLocaleString(undefined, {style:"currency", currency:"USD", maximumFractionDigits:0});
+    }
+
+    function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
+
+    // Base per-sqft rates (tune later)
+    const BASE_PSF = {
+      light:  { basic: 18, standard: 25, high: 35 },
+      medium: { basic: 28, standard: 38, high: 52 },
+      heavy:  { basic: 42, standard: 58, high: 78 },
+      gut:    { basic: 65, standard: 85, high: 110 }
+    };
+
+    // Add-on allowances (very rough)
+    const ADDONS = {
+      roof: 12000,
+      hvac: 9000,
+      plumbing: 8000,
+      electrical: 9000,
+      windows: 12000,
+      foundation: 15000
+    };
+
+    // Bathrooms + kitchen allowances (rough)
+    function bathCost(type, fullCount, halfCount){
+      // scaled by finish
+      const mult = type === "basic" ? 1.0 : type === "standard" ? 1.25 : 1.55;
+      const full = fullCount * 7500 * mult;
+      const half = halfCount * 3500 * mult;
+      return full + half;
+    }
+    function kitchenCost(scope, finish){
+      const mult = finish === "basic" ? 1.0 : finish === "standard" ? 1.25 : 1.6;
+      if(scope === "none") return 0;
+      if(scope === "refresh") return 5500 * mult;
+      return 16000 * mult; // full
+    }
+
+    function saveDraft(){
+      const d = {
+        sqft: els.sqft.value,
+        condition: els.condition.value,
+        finish: els.finish.value,
+        roof: els.roof.checked,
+        hvac: els.hvac.checked,
+        plumbing: els.plumbing.checked,
+        electrical: els.electrical.checked,
+        windows: els.windows.checked,
+        foundation: els.foundation.checked,
+        fullBaths: els.fullBaths.value,
+        halfBaths: els.halfBaths.value,
+        kitchen: els.kitchen.value,
+        notes: els.notes.value
+      };
+      localStorage.setItem(KEY, JSON.stringify(d));
+    }
+
+    function loadDraft(){
+      try{
+        const raw = localStorage.getItem(KEY);
+        if(!raw) return;
+        const d = JSON.parse(raw);
+        if(d.sqft != null) els.sqft.value = d.sqft;
+        if(d.condition) els.condition.value = d.condition;
+        if(d.finish) els.finish.value = d.finish;
+        ["roof","hvac","plumbing","electrical","windows","foundation"].forEach(k=>{
+          if(typeof d[k] === "boolean") els[k].checked = d[k];
+        });
+        if(d.fullBaths != null) els.fullBaths.value = d.fullBaths;
+        if(d.halfBaths != null) els.halfBaths.value = d.halfBaths;
+        if(d.kitchen) els.kitchen.value = d.kitchen;
+        if(d.notes != null) els.notes.value = d.notes;
+      } catch {}
+    }
+
+    function estimate(){
+      const sqft = clamp(Number(els.sqft.value)||0, 0, 25000);
+      const condition = els.condition.value;
+      const finish = els.finish.value;
+
+      const psf = BASE_PSF[condition][finish];
+      const base = sqft * psf;
+
+      // addons
+      const picked = [];
+      let addonsTotal = 0;
+      for(const k of ["roof","hvac","plumbing","electrical","windows","foundation"]){
+        if(els[k].checked){
+          addonsTotal += ADDONS[k];
+          picked.push(`${k.toUpperCase()}: ${money(ADDONS[k])}`);
+        }
+      }
+
+      const fullBaths = clamp(Number(els.fullBaths.value)||0, 0, 10);
+      const halfBaths = clamp(Number(els.halfBaths.value)||0, 0, 10);
+      const baths = bathCost(finish, fullBaths, halfBaths);
+
+      const kitchen = kitchenCost(els.kitchen.value, finish);
+
+      const rooms = baths + kitchen;
+
+      // contingency scaled by condition
+      const contPct = condition === "light" ? 0.08 : condition === "medium" ? 0.12 : condition === "heavy" ? 0.18 : 0.22;
+      const subtotal = base + addonsTotal + rooms;
+      const contingency = subtotal * contPct;
+
+      // range
+      const low = subtotal * 0.9;
+      const mid = subtotal + contingency;
+      const high = (subtotal + contingency) * 1.15;
+
+      // output
+      els.subtitle.textContent = `${sqft.toLocaleString()} sqft • ${condition.toUpperCase()} • ${finish.toUpperCase()}`;
+      els.rangeOut.textContent = `${money(low)} – ${money(high)}`;
+
+      els.baseOut.textContent = money(base);
+      els.psfOut.textContent = `Rate: ${money(psf)}/sqft (rule-of-thumb)`;
+
+      els.addonsOut.textContent = money(addonsTotal);
+      els.addonsList.textContent = picked.length ? picked.join(" • ") : "None selected";
+
+      els.roomsOut.textContent = money(rooms);
+      const kitchenLabel = els.kitchen.value === "none" ? "Kitchen: none" : els.kitchen.value === "refresh" ? "Kitchen: refresh" : "Kitchen: full";
+      els.roomsDetail.textContent = `Baths: ${fullBaths} full, ${halfBaths} half • ${kitchenLabel}`;
+
+      els.contOut.textContent = money(contingency);
+      els.contDetail.textContent = `Contingency: ${(contPct*100).toFixed(0)}% of subtotal`;
+
+      els.notesOut.textContent = els.notes.value.trim() || "—";
+
+      return { sqft, condition, finish, psf, base, addonsTotal, picked, rooms, baths, kitchen, contingency, low, mid, high, contPct };
+    }
+
+    function exportText(state){
+      const lines = [
+        `REPAIR ESTIMATE (ROUGH)`,
+        `${state.sqft.toLocaleString()} sqft • ${state.condition.toUpperCase()} • ${state.finish.toUpperCase()}`,
+        ``,
+        `RANGE: ${money(state.low)} – ${money(state.high)}`,
+        ``,
+        `Base rehab: ${money(state.base)} (${money(state.psf)}/sqft)`,
+        `Baths + kitchen: ${money(state.rooms)}`,
+        `Add-ons: ${money(state.addonsTotal)} ${state.picked.length ? "(" + state.picked.join(", ") + ")" : ""}`,
+        `Contingency: ${money(state.contingency)} (${Math.round(state.contPct*100)}%)`,
+        ``,
+        `Notes: ${els.notesOut.textContent}`,
+        ``,
+        `Not a bid. Verify locally with contractors.`
+      ];
+      return lines.join("\n");
+    }
+
+    els.form.addEventListener("submit", (e)=>{
+      e.preventDefault();
+      const state = estimate();
+      saveDraft();
+      document.getElementById("sheet").scrollIntoView({behavior:"smooth", block:"start"});
+      els.copyBtn.dataset.export = exportText(state);
+    });
+
+    els.form.addEventListener("input", saveDraft);
+
+    els.clearBtn.addEventListener("click", ()=>{
+      if(!confirm("Clear inputs?")) return;
+      localStorage.removeItem(KEY);
+      els.form.reset();
+      estimate();
+    });
+
+    els.copyBtn.addEventListener("click", async ()=>{
+      const text = els.copyBtn.dataset.export || "";
+      if(!text){ alert("Generate an estimate first."); return; }
+      try{
+        await navigator.clipboard.writeText(text);
+        const old = els.copyBtn.textContent;
+        els.copyBtn.textContent = "Copied";
+        setTimeout(()=>els.copyBtn.textContent = old, 900);
+      } catch {
+        alert("Copy failed. Select and copy manually.");
+      }
+    });
+
+    els.printBtn.addEventListener("click", ()=> window.print());
+
+    // init
+    loadDraft();
+    estimate();
+  </script>
+</body>
+</html>
