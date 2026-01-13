@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dispo Message Generator | DealPilot</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+  <div class="nav">
+    <div class="container">
+      <div class="nav-inner">
+        <a class="brand" href="index.html"><div class="logo"></div><div>DealPilot</div></a>
+        <div class="nav-links">
+          <a href="tools.html">← Back to Tools</a>
+          <a href="pipeline.html">Pipeline</a>
+          <a href="pricing.html">Pricing</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="container">
+      <h2>Dispo Message Generator</h2>
+      <p>Fill the deal details once. Get SMS + email drafts you can send to buyers.</p>
+
+      <div class="card pad">
+        <form id="form" class="form" autocomplete="off">
+          <div style="grid-column: 1 / -1;">
+            <label for="address">Property Address</label>
+            <input id="address" placeholder="123 Main St, City, ST" required />
+          </div>
+
+          <div>
+            <label for="beds">Beds</label>
+            <input id="beds" type="number" min="0" placeholder="3" />
+          </div>
+          <div>
+            <label for="baths">Baths</label>
+            <input id="baths" type="number" min="0" step="0.5" placeholder="2" />
+          </div>
+
+          <div>
+            <label for="sqft">Sq Ft</label>
+            <input id="sqft" type="number" min="0" placeholder="1400" />
+          </div>
+          <div>
+            <label for="year">Year Built (optional)</label>
+            <input id="year" type="number" min="1800" max="2050" placeholder="1958" />
+          </div>
+
+          <div>
+            <label for="arv">ARV</label>
+            <input id="arv" type="number" min="0" placeholder="320000" />
+          </div>
+          <div>
+            <label for="ask">Asking / Assignment Price</label>
+            <input id="ask" type="number" min="0" placeholder="185000" />
+          </div>
+
+          <div>
+            <label for="repairs">Repairs (estimate)</label>
+            <input id="repairs" type="number" min="0" placeholder="45000" />
+          </div>
+          <div>
+            <label for="emd">EMD</label>
+            <input id="emd" type="number" min="0" placeholder="5000" />
+          </div>
+
+          <div>
+            <label for="access">Access / Showing</label>
+            <input id="access" placeholder="Lockbox / vacant / by appointment" />
+          </div>
+          <div>
+            <label for="close">Close Date / Timeline</label>
+            <input id="close" placeholder="Can close ASAP / 2-3 weeks" />
+          </div>
+
+          <div style="grid-column: 1 / -1;">
+            <label for="highlights">Highlights (comma separated)</label>
+            <input id="highlights" placeholder="Corner lot, full basement, newer roof, strong comps" />
+            <div class="small" style="margin-top:6px; color:var(--muted);">
+              Tip: Keep it factual. Don’t promise rehab numbers as “guaranteed”.
+            </div>
+          </div>
+
+          <div>
+            <label for="dispoName">Your Name (sender)</label>
+            <input id="dispoName" placeholder="Gavin" />
+          </div>
+          <div>
+            <label for="company">Company (optional)</label>
+            <input id="company" placeholder="DealPilot / Your LLC" />
+          </div>
+
+          <div style="grid-column: 1 / -1; display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;">
+            <button type="button" class="btn" id="clearBtn">Clear</button>
+            <button type="submit" class="btn primary">Generate</button>
+          </div>
+        </form>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="grid3" style="grid-template-columns: 1fr; gap:14px;">
+        <div class="card pad">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
+            <h2 style="margin:0; font-size:18px;">SMS (Short)</h2>
+            <button class="btn" data-copy="#smsShort">Copy</button>
+          </div>
+          <div class="hr"></div>
+          <pre id="smsShort" class="out"></pre>
+        </div>
+
+        <div class="card pad">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
+            <h2 style="margin:0; font-size:18px;">SMS (Detailed)</h2>
+            <button class="btn" data-copy="#smsLong">Copy</button>
+          </div>
+          <div class="hr"></div>
+          <pre id="smsLong" class="out"></pre>
+        </div>
+
+        <div class="card pad">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
+            <h2 style="margin:0; font-size:18px;">Email Subject</h2>
+            <button class="btn" data-copy="#emailSubject">Copy</button>
+          </div>
+          <div class="hr"></div>
+          <pre id="emailSubject" class="out"></pre>
+        </div>
+
+        <div class="card pad">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
+            <h2 style="margin:0; font-size:18px;">Email Body</h2>
+            <button class="btn" data-copy="#emailBody">Copy</button>
+          </div>
+          <div class="hr"></div>
+          <pre id="emailBody" class="out"></pre>
+        </div>
+
+        <div class="card pad">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
+            <h2 style="margin:0; font-size:18px;">Blast Version (Buyer List)</h2>
+            <button class="btn" data-copy="#blast">Copy</button>
+          </div>
+          <div class="hr"></div>
+          <pre id="blast" class="out"></pre>
+        </div>
+      </div>
+
+      <div style="height:18px"></div>
+      <div class="card pad">
+        <h2 style="margin:0 0 8px; font-size:18px;">Next upgrades</h2>
+        <p class="small" style="margin:0; color:var(--muted); line-height:1.6;">
+          Phase 2: attach a generated one-pager PDF, store messages per deal in Pipeline, and send via email/SMS integrations.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .out{
+      margin:0;
+      white-space:pre-wrap;
+      word-break:break-word;
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text);
+      background: rgba(255,255,255,.03);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      line-height: 1.55;
+      min-height: 54px;
+    }
+  </style>
+
+  <script>
+    const KEY = "dealpilot_dispo_v1";
+
+    const $ = (sel) => document.querySelector(sel);
+
+    const els = {
+      form: $("#form"),
+      clearBtn: $("#clearBtn"),
+      address: $("#address"),
+      beds: $("#beds"),
+      baths: $("#baths"),
+      sqft: $("#sqft"),
+      year: $("#year"),
+      arv: $("#arv"),
+      ask: $("#ask"),
+      repairs: $("#repairs"),
+      emd: $("#emd"),
+      access: $("#access"),
+      close: $("#close"),
+      highlights: $("#highlights"),
+      dispoName: $("#dispoName"),
+      company: $("#company"),
+
+      smsShort: $("#smsShort"),
+      smsLong: $("#smsLong"),
+      emailSubject: $("#emailSubject"),
+      emailBody: $("#emailBody"),
+      blast: $("#blast")
+    };
+
+    function money(n){
+      const x = Number(n);
+      if (!isFinite(x) || x === 0) return "";
+      return x.toLocaleString(undefined, {style:"currency", currency:"USD", maximumFractionDigits:0});
+    }
+
+    function clean(s){ return String(s || "").trim(); }
+
+    function lineIf(label, value){
+      const v = clean(value);
+      if (!v) return "";
+      return `${label}: ${v}`;
+    }
+
+    function build(){
+      const address = clean(els.address.value);
+      const beds = clean(els.beds.value);
+      const baths = clean(els.baths.value);
+      const sqft = clean(els.sqft.value);
+      const year = clean(els.year.value);
+
+      const arv = money(els.arv.value);
+      const ask = money(els.ask.value);
+      const repairs = money(els.repairs.value);
+      const emd = money(els.emd.value);
+
+      const access = clean(els.access.value);
+      const close = clean(els.close.value);
+
+      const highlights = clean(els.highlights.value)
+        .split(",")
+        .map(x=>x.trim())
+        .filter(Boolean);
+
+      const sender = clean(els.dispoName.value) || "—";
+      const company = clean(els.company.value);
+
+      const bedbath = [beds ? `${beds} bed` : "", baths ? `${baths} bath` : ""].filter(Boolean).join(" / ");
+      const metaBits = [bedbath, sqft ? `${sqft} sqft` : "", year ? `Built ${year}` : ""].filter(Boolean).join(" • ");
+
+      const keyNums = [
+        ask ? `Asking: ${ask}` : "",
+        arv ? `ARV: ${arv}` : "",
+        repairs ? `Repairs est: ${repairs}` : "",
+        emd ? `EMD: ${emd}` : ""
+      ].filter(Boolean).join(" | ");
+
+      const hLine = highlights.length ? `Highlights: ${highlights.join(", ")}` : "";
+
+      // SMS short (tight)
+      els.smsShort.textContent =
+`New off-market deal: ${address}${metaBits ? " ("+metaBits+")" : ""}.
+${ask ? "Asking "+ask+". " : ""}${arv ? "ARV ~ "+arv+". " : ""}${repairs ? "Repairs est "+repairs+". " : ""}${close ? "Close: "+close+". " : ""}${access ? "Access: "+access+". " : ""}
+Reply “INFO” for details. - ${sender}${company ? " ("+company+")" : ""}`.replaceAll("  "," ").trim();
+
+      // SMS long (structured)
+      const smsLongLines = [
+        `Deal: ${address}`,
+        metaBits ? `Details: ${metaBits}` : "",
+        keyNums ? keyNums : "",
+        access ? `Access: ${access}` : "",
+        close ? `Close: ${close}` : "",
+        hLine ? hLine : "",
+        "",
+        `Interested? Reply with your email + proof of funds if required.`,
+        `- ${sender}${company ? " ("+company+")" : ""}`
+      ].filter(Boolean);
+
+      els.smsLong.textContent = smsLongLines.join("\n");
+
+      // Email subject
+      els.emailSubject.textContent =
+`${address}${ask ? " - " + ask : ""}${beds || baths ? " (" + [beds?beds+"bd":"", baths?baths+"ba":""].filter(Boolean).join("/") + ")" : ""}`.trim();
+
+      // Email body (buyer-friendly)
+      const bodyLines = [
+        `Hey —`,
+        ``,
+        `I have an off-market opportunity available:`,
+        ``,
+        `Property: ${address}`,
+        metaBits ? `Specs: ${metaBits}` : "",
+        ask ? `Asking (assignment): ${ask}` : "",
+        arv ? `ARV (estimate): ${arv}` : "",
+        repairs ? `Repairs (estimate): ${repairs}` : "",
+        emd ? `EMD: ${emd}` : "",
+        access ? `Access: ${access}` : "",
+        close ? `Close timeline: ${close}` : "",
+        highlights.length ? `Highlights: ${highlights.join(", ")}` : "",
+        ``,
+        `If you’re interested, reply with:`,
+        `1) Your best number for this deal`,
+        `2) Proof of funds (if needed)`,
+        `3) Your buy box (price range, areas, property type)`,
+        ``,
+        `Thanks,`,
+        `${sender}${company ? "\n"+company : ""}`
+      ].filter(Boolean);
+
+      els.emailBody.textContent = bodyLines.join("\n");
+
+      // Blast version
+      const blastLines = [
+        `OFF-MARKET DEAL AVAILABLE`,
+        `${address}`,
+        metaBits ? metaBits : "",
+        keyNums ? keyNums : "",
+        access ? `Access: ${access}` : "",
+        close ? `Close: ${close}` : "",
+        hLine ? hLine : "",
+        ``,
+        `Reply with your offer + email + POF if needed.`,
+        `- ${sender}${company ? " ("+company+")" : ""}`
+      ].filter(Boolean);
+
+      els.blast.textContent = blastLines.join("\n");
+    }
+
+    function saveDraft(){
+      const data = {
+        address: els.address.value,
+        beds: els.beds.value,
+        baths: els.baths.value,
+        sqft: els.sqft.value,
+        year: els.year.value,
+        arv: els.arv.value,
+        ask: els.ask.value,
+        repairs: els.repairs.value,
+        emd: els.emd.value,
+        access: els.access.value,
+        close: els.close.value,
+        highlights: els.highlights.value,
+        dispoName: els.dispoName.value,
+        company: els.company.value
+      };
+      localStorage.setItem(KEY, JSON.stringify(data));
+    }
+
+    function loadDraft(){
+      try{
+        const raw = localStorage.getItem(KEY);
+        if(!raw) return;
+        const d = JSON.parse(raw);
+        for (const k in d){
+          if (els[k]) els[k].value = d[k];
+        }
+      } catch {}
+    }
+
+    // copy buttons
+    document.addEventListener("click", async (e)=>{
+      const btn = e.target.closest("[data-copy]");
+      if(!btn) return;
+      const sel = btn.getAttribute("data-copy");
+      const node = document.querySelector(sel);
+      if(!node) return;
+      const text = node.textContent || "";
+      try{
+        await navigator.clipboard.writeText(text);
+        const old = btn.textContent;
+        btn.textContent = "Copied";
+        setTimeout(()=>btn.textContent = old, 900);
+      } catch {
+        alert("Copy failed. Select and copy manually.");
+      }
+    });
+
+    els.form.addEventListener("submit", (e)=>{
+      e.preventDefault();
+      build();
+      saveDraft();
+      // scroll to outputs
+      els.smsShort.scrollIntoView({behavior:"smooth", block:"start"});
+    });
+
+    els.clearBtn.addEventListener("click", ()=>{
+      if(!confirm("Clear inputs?")) return;
+      localStorage.removeItem(KEY);
+      els.form.reset();
+      els.smsShort.textContent = "";
+      els.smsLong.textContent = "";
+      els.emailSubject.textContent = "";
+      els.emailBody.textContent = "";
+      els.blast.textContent = "";
+    });
+
+    // auto-save as they type (light)
+    els.form.addEventListener("input", ()=>{
+      saveDraft();
+    });
+
+    // init
+    loadDraft();
+    build();
+  </script>
+</body>
+</html>
