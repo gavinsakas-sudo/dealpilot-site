@@ -7,543 +7,228 @@
   <link rel="stylesheet" href="assets/styles.css" />
 </head>
 <body>
-  <div class="nav">
-    <div class="container">
-      <div class="nav-inner">
-        <a class="brand" href="index.html"><div class="logo"></div><div>DealPilot</div></a>
-        <div class="nav-links">
-          <a href="analyzer.html">Analyzer</a>
-          <a href="pipeline.html" style="color:var(--text); background:rgba(255,255,255,.05);">Pipeline</a>
-          <a href="tools.html">Premium Tools</a>
-          <a href="pricing.html">Pricing</a>
-        </div>
+
+<div class="nav">
+  <div class="container">
+    <div class="nav-inner">
+      <a class="brand" href="index.html">
+        <div class="logo"></div>
+        <div>DealPilot</div>
+      </a>
+      <div class="nav-links">
+        <a href="analyzer.html">Analyzer</a>
+        <a href="pipeline.html" style="color:var(--text); background:rgba(255,255,255,.05);">Pipeline</a>
+        <a href="tools.html">Premium Tools</a>
+        <a href="pricing.html">Pricing</a>
       </div>
     </div>
   </div>
+</div>
 
-  <div class="section">
-    <div class="container">
-      <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:12px; flex-wrap:wrap;">
-        <div>
-          <h2 style="margin:0 0 6px;">Pipeline</h2>
-          <p style="margin:0; color:var(--muted); line-height:1.6;">
-            Drag deals across stages. Saved locally in your browser (MVP).
-          </p>
-        </div>
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <button class="btn" id="exportBtn">Export JSON</button>
-          <button class="btn" id="importBtn">Import JSON</button>
-          <button class="btn primary" id="addDealBtn">+ Add Deal</button>
-        </div>
+<div class="section">
+  <div class="container">
+    <div style="display:flex; justify-content:space-between; align-items:flex-end; gap:12px; flex-wrap:wrap;">
+      <div>
+        <h2 style="margin:0;">Pipeline</h2>
+        <p style="margin:0; color:var(--muted);">Drag deals through your wholesaling workflow.</p>
       </div>
-
-      <div style="height:14px"></div>
-
-      <div class="card pad">
-        <div class="small" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;">
-          <div>
-            <b id="countOut">0</b> deals •
-            Total projected profit (rough): <b id="profitOut">$0</b>
-          </div>
-          <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-            <span class="small">Show:</span>
-            <select id="filterStage" style="max-width:220px;">
-              <option value="ALL">All stages</option>
-              <option value="LEADS">Leads</option>
-              <option value="UNDER_CONTRACT">Under Contract</option>
-              <option value="MARKETING">Marketing</option>
-              <option value="CLOSED">Assigned/Closed</option>
-              <option value="DEAD">Dead</option>
-            </select>
-            <input id="search" placeholder="Search address / notes..." style="max-width:260px;" />
-          </div>
-        </div>
-      </div>
-
-      <div style="height:14px"></div>
-
-      <div id="board" class="kanban"></div>
-
-      <div style="height:18px"></div>
-      <div class="card pad">
-        <h2 style="margin:0 0 8px; font-size:18px;">Next upgrade (Phase 2)</h2>
-        <p class="small" style="margin:0; color:var(--muted); line-height:1.6;">
-          We’ll add login + cloud storage so your pipeline syncs across devices and can be gated to Premium.
-        </p>
-      </div>
+      <button class="btn primary" id="addDealBtn">+ Add Deal</button>
     </div>
-  </div>
 
-  <!-- Modal -->
-  <div id="modalBackdrop" class="modal-backdrop" aria-hidden="true"></div>
-  <div id="modal" class="modal" aria-hidden="true" role="dialog" aria-modal="true">
-    <div class="card pad">
-      <div style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
-        <h2 id="modalTitle" style="margin:0; font-size:18px;">Add Deal</h2>
-        <button class="btn" id="closeModalBtn">Close</button>
+    <div style="height:14px"></div>
+    <div id="board" class="kanban"></div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="backdrop" class="modal-backdrop"></div>
+<div id="modal" class="modal">
+  <div class="card pad">
+    <h2 id="modalTitle">Add Deal</h2>
+    <form id="form" class="form">
+
+      <input type="hidden" id="id">
+
+      <div style="grid-column:1/-1">
+        <label>Address</label>
+        <input id="address" required>
       </div>
-      <div class="hr"></div>
 
-      <form id="dealForm" class="form" autocomplete="off">
-        <input type="hidden" id="dealId" />
+      <div>
+        <label>Stage</label>
+        <select id="stage">
+          <option value="LEADS">Leads</option>
+          <option value="MARKETING">Marketing</option>
+          <option value="UNDER_CONTRACT">Under Contract</option>
+          <option value="CLOSED">Assigned / Closed</option>
+          <option value="DEAD">Dead</option>
+        </select>
+      </div>
 
-        <div style="grid-column: 1 / -1;">
-          <label for="address">Property Address</label>
-          <input id="address" placeholder="123 Main St, City, ST" required />
-        </div>
+      <div>
+        <label>ARV</label>
+        <input id="arv" type="number">
+      </div>
 
-        <div>
-          <label for="stage">Stage</label>
-          <select id="stage">
-            <option value="LEADS">Leads</option>
-            <option value="UNDER_CONTRACT">Under Contract</option>
-            <option value="MARKETING">Marketing</option>
-            <option value="CLOSED">Assigned/Closed</option>
-            <option value="DEAD">Dead</option>
-          </select>
-        </div>
+      <div>
+        <label>Repairs</label>
+        <input id="repairs" type="number">
+      </div>
 
-        <div>
-          <label for="sellerPrice">Seller Asking (optional)</label>
-          <input id="sellerPrice" type="number" min="0" placeholder="e.g., 190000" />
-        </div>
+      <div>
+        <label>Your Offer</label>
+        <input id="offer" type="number">
+      </div>
 
-        <div>
-          <label for="arv">ARV</label>
-          <input id="arv" type="number" min="0" placeholder="e.g., 320000" />
-        </div>
+      <div>
+        <label>Assignment</label>
+        <input id="assignment" type="number" value="10000">
+      </div>
 
-        <div>
-          <label for="repairs">Repairs</label>
-          <input id="repairs" type="number" min="0" placeholder="e.g., 45000" />
-        </div>
+      <div style="grid-column:1/-1">
+        <label>Notes</label>
+        <input id="notes">
+      </div>
 
-        <div>
-          <label for="assignment">Assignment Fee</label>
-          <input id="assignment" type="number" min="0" value="10000" />
-        </div>
-
-        <div>
-          <label for="offer">Your Offer</label>
-          <input id="offer" type="number" min="0" placeholder="e.g., 165000" />
-        </div>
-
-        <div style="grid-column: 1 / -1;">
-          <label for="notes">Notes (optional)</label>
-          <input id="notes" placeholder="Seller situation, follow-up date, buyer interest, etc." />
-          <div class="small" style="margin-top:6px; color:var(--muted);">
-            MAO uses 70% rule: MAO = ARV * 0.70 - Repairs - Assignment
-          </div>
-        </div>
-
-        <div style="grid-column: 1 / -1; display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:flex-end;">
-          <button type="button" class="btn" id="deleteBtn" style="display:none;">Delete</button>
-          <button type="submit" class="btn primary" id="saveBtn">Save Deal</button>
-        </div>
-      </form>
-    </div>
+      <div style="grid-column:1/-1; display:flex; justify-content:flex-end; gap:10px;">
+        <button type="button" class="btn" id="deleteBtn" style="display:none;">Delete</button>
+        <button class="btn primary">Save</button>
+      </div>
+    </form>
   </div>
+</div>
 
-  <style>
-    /* Pipeline-specific CSS (kept here so you don’t need another file) */
-    .kanban{display:grid; grid-template-columns: repeat(5, 1fr); gap:12px; align-items:start}
-    @media (max-width: 1200px){ .kanban{grid-template-columns: repeat(2, 1fr);} }
-    @media (max-width: 720px){ .kanban{grid-template-columns: 1fr;} }
+<style>
+.kanban{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:16px}
+@media(max-width:1100px){.kanban{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.kanban{grid-template-columns:1fr}}
 
-    .col{border:1px solid var(--border); border-radius: var(--radius); background:rgba(255,255,255,.03); overflow:hidden}
-    .col-head{padding:12px 12px 10px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:10px}
-    .col-title{font-weight:800; letter-spacing:-.2px}
-    .pill{font-family:var(--mono); font-size:12px; color:var(--muted); border:1px solid var(--border); padding:4px 8px; border-radius:999px}
-    .dropzone{padding:12px; min-height:120px; display:flex; flex-direction:column; gap:10px}
-    .dropzone.dragover{outline:2px solid rgba(110,231,255,.25); background:rgba(110,231,255,.04)}
+.column{border:1px solid var(--border);border-radius:16px;background:rgba(255,255,255,.03)}
+.col-head{padding:10px;border-bottom:1px solid var(--border);font-weight:700}
+.drop{padding:10px;min-height:120px;display:flex;flex-direction:column;gap:8px}
 
-    .deal{
-      border:1px solid var(--border);
-      border-radius:14px;
-      background:rgba(11,15,23,.55);
-      padding:10px 10px;
-      cursor:grab;
-    }
-    .deal:active{cursor:grabbing}
-    .deal-top{display:flex; justify-content:space-between; align-items:flex-start; gap:10px}
-    .deal-addr{font-weight:750; font-size:13px; line-height:1.35}
-    .deal-meta{font-size:12px; color:var(--muted); margin-top:6px; line-height:1.4}
-    .deal-row{display:flex; gap:8px; flex-wrap:wrap; margin-top:8px}
-    .tag{font-family:var(--mono); font-size:12px; border:1px solid var(--border); color:var(--muted); padding:4px 8px; border-radius:999px}
-    .tag b{color:var(--text)}
-    .deal-actions{display:flex; gap:8px}
-    .iconbtn{
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.04);
-      color:var(--text);
-      padding:6px 9px;
-      border-radius:12px;
-      font-size:12px;
-      cursor:pointer;
-    }
-    .iconbtn:hover{background:rgba(255,255,255,.07)}
+.card-deal{border:1px solid var(--border);border-radius:12px;padding:10px;background:rgba(11,15,23,.6)}
+.card-deal small{color:var(--muted)}
+.actions{display:flex;gap:6px;margin-top:8px}
+.actions button{font-size:12px}
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none}
+.modal{position:fixed;top:40px;left:0;right:0;max-width:800px;margin:auto;display:none}
+</style>
 
-    .modal-backdrop{
-      position:fixed; inset:0;
-      background:rgba(0,0,0,.55);
-      display:none;
-      z-index:50;
-    }
-    .modal{
-      position:fixed;
-      inset: 40px 0 auto 0;
-      max-width: 860px;
-      margin: 0 auto;
-      display:none;
-      z-index:60;
-      padding: 0 16px;
-    }
-  </style>
+<script>
+const KEY="dealpilot_pipeline_v2";
+const STAGES=[
+  ["LEADS","Leads"],
+  ["MARKETING","Marketing"],
+  ["UNDER_CONTRACT","Under Contract"],
+  ["CLOSED","Assigned / Closed"],
+  ["DEAD","Dead"]
+];
 
-  <script>
-    // ------- Data model -------
-    const STORAGE_KEY = "dealpilot_pipeline_v1";
+let deals=JSON.parse(localStorage.getItem(KEY)||"[]");
 
-    const STAGES = [
-      { key: "LEADS", label: "Leads" },
-      { key: "UNDER_CONTRACT", label: "Under Contract" },
-      { key: "MARKETING", label: "Marketing" },
-      { key: "CLOSED", label: "Assigned/Closed" },
-      { key: "DEAD", label: "Dead" }
-    ];
+const board=document.getElementById("board");
+const modal=document.getElementById("modal");
+const backdrop=document.getElementById("backdrop");
+const form=document.getElementById("form");
+const deleteBtn=document.getElementById("deleteBtn");
 
-    function uid() {
-      return Math.random().toString(16).slice(2) + "-" + Date.now().toString(16);
-    }
+function save(){localStorage.setItem(KEY,JSON.stringify(deals))}
+function uid(){return crypto.randomUUID()}
 
-    function money(n){
-      const x = Number(n);
-      if (!isFinite(x)) return "$0";
-      return x.toLocaleString(undefined, {style:"currency", currency:"USD", maximumFractionDigits:0});
-    }
+function openModal(d=null){
+  modal.style.display="block";
+  backdrop.style.display="block";
+  deleteBtn.style.display=d?"inline-flex":"none";
+  form.id.value=d?.id||"";
+  address.value=d?.address||"";
+  stage.value=d?.stage||"LEADS";
+  arv.value=d?.arv||"";
+  repairs.value=d?.repairs||"";
+  offer.value=d?.offer||"";
+  assignment.value=d?.assignment||10000;
+  notes.value=d?.notes||"";
+}
 
-    function toNum(v){
-      const x = Number(v);
-      return isFinite(x) ? x : 0;
-    }
+function closeModal(){
+  modal.style.display="none";
+  backdrop.style.display="none";
+  form.reset();
+}
 
-    function computeMAO(arv, repairs, assignment){
-      return (toNum(arv) * 0.70) - toNum(repairs) - toNum(assignment);
-    }
+function mao(d){return d.arv*0.7-d.repairs-d.assignment}
+function money(n){return "$"+Number(n||0).toLocaleString()}
 
-    function computeProfit(arv, repairs, offer, assignment){
-      return toNum(arv) - toNum(repairs) - toNum(offer) - toNum(assignment);
-    }
-
-    function loadDeals(){
-      try{
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if(!raw) return [];
-        const parsed = JSON.parse(raw);
-        return Array.isArray(parsed) ? parsed : [];
-      } catch {
-        return [];
-      }
-    }
-
-    function saveDeals(deals){
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(deals));
-    }
-
-    // ------- UI -------
-    const board = document.getElementById("board");
-    const filterStage = document.getElementById("filterStage");
-    const search = document.getElementById("search");
-    const countOut = document.getElementById("countOut");
-    const profitOut = document.getElementById("profitOut");
-
-    // Modal elements
-    const modalBackdrop = document.getElementById("modalBackdrop");
-    const modal = document.getElementById("modal");
-    const modalTitle = document.getElementById("modalTitle");
-    const addDealBtn = document.getElementById("addDealBtn");
-    const closeModalBtn = document.getElementById("closeModalBtn");
-    const dealForm = document.getElementById("dealForm");
-    const deleteBtn = document.getElementById("deleteBtn");
-
-    // Form fields
-    const f = {
-      dealId: document.getElementById("dealId"),
-      address: document.getElementById("address"),
-      stage: document.getElementById("stage"),
-      sellerPrice: document.getElementById("sellerPrice"),
-      arv: document.getElementById("arv"),
-      repairs: document.getElementById("repairs"),
-      assignment: document.getElementById("assignment"),
-      offer: document.getElementById("offer"),
-      notes: document.getElementById("notes")
+function render(){
+  board.innerHTML="";
+  STAGES.forEach(([key,label])=>{
+    const col=document.createElement("div");
+    col.className="column";
+    col.innerHTML=`<div class="col-head">${label}</div>`;
+    const drop=document.createElement("div");
+    drop.className="drop";
+    drop.ondragover=e=>e.preventDefault();
+    drop.ondrop=e=>{
+      const id=e.dataTransfer.getData("id");
+      const d=deals.find(x=>x.id===id);
+      d.stage=key; save(); render();
     };
-
-    let deals = loadDeals();
-
-    function openModal(mode, deal=null){
-      modalTitle.textContent = mode === "edit" ? "Edit Deal" : "Add Deal";
-      deleteBtn.style.display = mode === "edit" ? "inline-flex" : "none";
-
-      if(deal){
-        f.dealId.value = deal.id;
-        f.address.value = deal.address || "";
-        f.stage.value = deal.stage || "LEADS";
-        f.sellerPrice.value = deal.sellerPrice ?? "";
-        f.arv.value = deal.arv ?? "";
-        f.repairs.value = deal.repairs ?? "";
-        f.assignment.value = deal.assignment ?? 10000;
-        f.offer.value = deal.offer ?? "";
-        f.notes.value = deal.notes || "";
-      } else {
-        f.dealId.value = "";
-        f.address.value = "";
-        f.stage.value = "LEADS";
-        f.sellerPrice.value = "";
-        f.arv.value = "";
-        f.repairs.value = "";
-        f.assignment.value = 10000;
-        f.offer.value = "";
-        f.notes.value = "";
-      }
-
-      modalBackdrop.style.display = "block";
-      modal.style.display = "block";
-      modalBackdrop.setAttribute("aria-hidden","false");
-      modal.setAttribute("aria-hidden","false");
-      setTimeout(()=>f.address.focus(), 0);
-    }
-
-    function closeModal(){
-      modalBackdrop.style.display = "none";
-      modal.style.display = "none";
-      modalBackdrop.setAttribute("aria-hidden","true");
-      modal.setAttribute("aria-hidden","true");
-    }
-
-    function render(){
-      // filters
-      const stageFilter = filterStage.value;
-      const q = (search.value || "").trim().toLowerCase();
-
-      const visible = deals.filter(d=>{
-        const matchStage = stageFilter === "ALL" ? true : d.stage === stageFilter;
-        const matchText = !q ? true : ((d.address||"").toLowerCase().includes(q) || (d.notes||"").toLowerCase().includes(q));
-        return matchStage && matchText;
-      });
-
-      // header stats
-      countOut.textContent = String(visible.length);
-      const totalProfit = visible.reduce((sum,d)=> sum + computeProfit(d.arv, d.repairs, d.offer, d.assignment), 0);
-      profitOut.textContent = money(totalProfit);
-
-      // board
-      board.innerHTML = "";
-      for(const s of STAGES){
-        const col = document.createElement("div");
-        col.className = "col";
-
-        const inCol = visible.filter(d=>d.stage === s.key);
-        const head = document.createElement("div");
-        head.className = "col-head";
-        head.innerHTML = `
-          <div class="col-title">${s.label}</div>
-          <div class="pill">${inCol.length}</div>
-        `;
-
-        const dz = document.createElement("div");
-        dz.className = "dropzone";
-        dz.dataset.stage = s.key;
-
-        // drop events
-        dz.addEventListener("dragover", (e)=>{ e.preventDefault(); dz.classList.add("dragover"); });
-        dz.addEventListener("dragleave", ()=> dz.classList.remove("dragover"));
-        dz.addEventListener("drop", (e)=>{
-          e.preventDefault();
-          dz.classList.remove("dragover");
-          const id = e.dataTransfer.getData("text/deal-id");
-          if(!id) return;
-          const idx = deals.findIndex(x=>x.id === id);
-          if(idx === -1) return;
-          deals[idx].stage = s.key;
-          saveDeals(deals);
-          render();
+    deals.filter(d=>d.stage===key).forEach(d=>{
+      const c=document.createElement("div");
+      c.className="card-deal";
+      c.draggable=true;
+      c.ondragstart=e=>e.dataTransfer.setData("id",d.id);
+      c.innerHTML=`
+        <b>${d.address}</b>
+        <small>${money(d.offer)} → MAO ${money(mao(d))}</small>
+        <div class="actions">
+          <button class="btn" data-edit>Edit</button>
+          <button class="btn" data-dispo>Dispo</button>
+        </div>`;
+      c.querySelector("[data-edit]").onclick=()=>openModal(d);
+      c.querySelector("[data-dispo]").onclick=()=>{
+        const q=new URLSearchParams({
+          address:d.address,
+          arv:d.arv,
+          ask:d.offer,
+          repairs:d.repairs,
+          notes:d.notes
         });
-
-        // cards
-        for(const d of inCol){
-          dz.appendChild(renderDealCard(d));
-        }
-
-        col.appendChild(head);
-        col.appendChild(dz);
-        board.appendChild(col);
-      }
-    }
-
-    function renderDealCard(d){
-      const mao = computeMAO(d.arv, d.repairs, d.assignment);
-      const profit = computeProfit(d.arv, d.repairs, d.offer, d.assignment);
-
-      const el = document.createElement("div");
-      el.className = "deal";
-      el.draggable = true;
-      el.dataset.id = d.id;
-
-      el.addEventListener("dragstart", (e)=>{
-        e.dataTransfer.setData("text/deal-id", d.id);
-        e.dataTransfer.effectAllowed = "move";
-      });
-
-      const top = document.createElement("div");
-      top.className = "deal-top";
-
-      const left = document.createElement("div");
-      left.innerHTML = `
-        <div class="deal-addr">${escapeHtml(d.address || "Untitled deal")}</div>
-        <div class="deal-meta">
-          ${d.notes ? escapeHtml(d.notes) : "<span style='color:var(--muted)'>No notes</span>"}
-        </div>
-      `;
-
-      const actions = document.createElement("div");
-      actions.className = "deal-actions";
-      const edit = document.createElement("button");
-      edit.className = "iconbtn";
-      edit.type = "button";
-      edit.textContent = "Edit";
-      edit.addEventListener("click", ()=> openModal("edit", d));
-
-      actions.appendChild(edit);
-
-      top.appendChild(left);
-      top.appendChild(actions);
-
-      const row = document.createElement("div");
-      row.className = "deal-row";
-      row.innerHTML = `
-        <div class="tag">ARV <b>${money(d.arv)}</b></div>
-        <div class="tag">Offer <b>${money(d.offer)}</b></div>
-        <div class="tag">Repairs <b>${money(d.repairs)}</b></div>
-        <div class="tag">MAO <b>${money(mao)}</b></div>
-        <div class="tag">Profit <b>${money(profit)}</b></div>
-      `;
-
-      el.appendChild(top);
-      el.appendChild(row);
-
-      return el;
-    }
-
-    function escapeHtml(str){
-      return String(str)
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-    }
-
-    // ------- Events -------
-    addDealBtn.addEventListener("click", ()=> openModal("add"));
-    closeModalBtn.addEventListener("click", closeModal);
-    modalBackdrop.addEventListener("click", closeModal);
-    document.addEventListener("keydown", (e)=>{ if(e.key === "Escape") closeModal(); });
-
-    filterStage.addEventListener("change", render);
-    search.addEventListener("input", render);
-
-    dealForm.addEventListener("submit", (e)=>{
-      e.preventDefault();
-
-      const payload = {
-        id: f.dealId.value || uid(),
-        address: f.address.value.trim(),
-        stage: f.stage.value,
-        sellerPrice: f.sellerPrice.value === "" ? null : toNum(f.sellerPrice.value),
-        arv: f.arv.value === "" ? 0 : toNum(f.arv.value),
-        repairs: f.repairs.value === "" ? 0 : toNum(f.repairs.value),
-        assignment: f.assignment.value === "" ? 0 : toNum(f.assignment.value),
-        offer: f.offer.value === "" ? 0 : toNum(f.offer.value),
-        notes: f.notes.value.trim(),
-        updatedAt: Date.now(),
-        createdAt: f.dealId.value ? undefined : Date.now()
+        window.open("tool-dispo.html?"+q.toString(),"_blank");
       };
-
-      if(!payload.address){
-        alert("Please enter an address (or a label).");
-        return;
-      }
-
-      const idx = deals.findIndex(x=>x.id === payload.id);
-      if(idx === -1){
-        deals.unshift(payload);
-      } else {
-        deals[idx] = {...deals[idx], ...payload};
-      }
-
-      saveDeals(deals);
-      closeModal();
-      render();
+      drop.appendChild(c);
     });
+    col.appendChild(drop);
+    board.appendChild(col);
+  });
+}
 
-    deleteBtn.addEventListener("click", ()=>{
-      const id = f.dealId.value;
-      if(!id) return;
-      if(!confirm("Delete this deal?")) return;
-      deals = deals.filter(d=>d.id !== id);
-      saveDeals(deals);
-      closeModal();
-      render();
-    });
+document.getElementById("addDealBtn").onclick=()=>openModal();
+backdrop.onclick=closeModal;
 
-    // Export / Import
-    document.getElementById("exportBtn").addEventListener("click", ()=>{
-      const blob = new Blob([JSON.stringify(deals, null, 2)], {type:"application/json"});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "dealpilot-pipeline.json";
-      a.click();
-      URL.revokeObjectURL(url);
-    });
+form.onsubmit=e=>{
+  e.preventDefault();
+  const d={
+    id:form.id.value||uid(),
+    address:address.value,
+    stage:stage.value,
+    arv:+arv.value||0,
+    repairs:+repairs.value||0,
+    offer:+offer.value||0,
+    assignment:+assignment.value||0,
+    notes:notes.value
+  };
+  const i=deals.findIndex(x=>x.id===d.id);
+  i>=0?deals[i]=d:deals.unshift(d);
+  save(); closeModal(); render();
+};
 
-    document.getElementById("importBtn").addEventListener("click", async ()=>{
-      const input = document.createElement("input");
-      input.type = "file";
-      input.accept = "application/json";
-      input.onchange = async () => {
-        const file = input.files?.[0];
-        if(!file) return;
-        try{
-          const text = await file.text();
-          const parsed = JSON.parse(text);
-          if(!Array.isArray(parsed)) throw new Error("Invalid format.");
-          deals = parsed.map(d=>({
-            id: d.id || uid(),
-            address: d.address || "Imported deal",
-            stage: d.stage || "LEADS",
-            sellerPrice: d.sellerPrice ?? null,
-            arv: toNum(d.arv),
-            repairs: toNum(d.repairs),
-            assignment: toNum(d.assignment),
-            offer: toNum(d.offer),
-            notes: d.notes || "",
-            createdAt: d.createdAt || Date.now(),
-            updatedAt: Date.now()
-          }));
-          saveDeals(deals);
-          render();
-          alert("Imported successfully.");
-        } catch(err){
-          alert("Import failed: " + (err?.message || "Unknown error"));
-        }
-      };
-      input.click();
-    });
+deleteBtn.onclick=()=>{
+  deals=deals.filter(d=>d.id!==form.id.value);
+  save(); closeModal(); render();
+};
 
-    // Initial render
-    render();
-  </script>
+render();
+</script>
 </body>
 </html>
