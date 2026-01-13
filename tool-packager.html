@@ -229,15 +229,104 @@
     }
 
     /* Print styling */
-    @media print{
-      body{background:#fff !important; color:#000 !important}
-      .nav, form, #copyBtn, #printBtn, .small, p, h2 { display:none !important; }
-      .section{padding:0 !important}
-      .container{max-width: none !important; padding: 0 !important}
-      .card{box-shadow:none !important; border:none !important}
-      .sheet{border:1px solid #ddd !important; background:#fff !important}
-      .box{background:#fff !important}
-    }
+   @media print {
+  html, body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-size: 12.5px;
+  }
+
+  /* Hide UI */
+  .nav, form, #copyBtn, #printBtn, .small, p, h2 {
+    display: none !important;
+  }
+
+  /* Expand layout */
+  .section {
+    padding: 0 !important;
+  }
+
+  .container {
+    max-width: none !important;
+    padding: 0 !important;
+  }
+
+  .card {
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+
+  /* Force full-page sheet */
+  .sheet {
+    width: 100% !important;
+    min-height: 100vh;
+    border: none !important;
+    background: #ffffff !important;
+    padding: 24px !important;
+  }
+
+  /* Strong headers */
+  .sheet-title {
+    font-size: 22px !important;
+    font-weight: 900 !important;
+    color: #000000 !important;
+  }
+
+  .sheet-sub {
+    font-size: 12px !important;
+    color: #333333 !important;
+  }
+
+  .sheet-pill {
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    color: #000000 !important;
+    border: 1px solid #000000 !important;
+    background: #ffffff !important;
+  }
+
+  /* Content boxes */
+  .box {
+    background: #ffffff !important;
+    border: 1px solid #cccccc !important;
+    padding: 14px !important;
+  }
+
+  .k {
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    color: #000000 !important;
+    opacity: 1 !important;
+  }
+
+  .v {
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    color: #000000 !important;
+  }
+
+  .s {
+    font-size: 12px !important;
+    color: #222222 !important;
+    opacity: 1 !important;
+  }
+
+  .sheet-disclaimer {
+    font-size: 11px !important;
+    color: #000000 !important;
+    border-top: 1px solid #cccccc !important;
+    margin-top: 18px !important;
+    padding-top: 10px !important;
+  }
+
+  /* Grid should fill page cleanly */
+  .sheet-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 14px !important;
+  }
+}
+
   </style>
 
   <script>
