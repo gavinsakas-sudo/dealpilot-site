@@ -229,3 +229,18 @@ input:focus{border-color: rgba(110,231,255,.45)}
     background:rgba(255,255,255,.02) !important;
   }
 }
+body {
+  background: #060812;
+  position: relative;
+}
+
+body::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(900px 700px at 20% 0%, rgba(120,110,255,.35), transparent 60%),
+    radial-gradient(900px 700px at 90% 20%, rgba(0,200,255,.18), transparent 55%),
+    linear-gradient(180deg, #070A12 0%, #05070F 100%);
+}
