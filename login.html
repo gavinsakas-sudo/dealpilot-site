@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="assets/styles.css" />
 
   <!-- Supabase JS (CDN) + your client -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="assets/supabaseClient.js"></script>
 </head>
 <body>
@@ -76,7 +76,21 @@
  <script>
 document.addEventListener("DOMContentLoaded", () => {
 
+    if (!window.supabase) {
+  console.error("Supabase CDN global not found. Check script src.");
+}
+if (!window.supabaseClient) {
+  console.error("supabaseClient not initialized. supabaseClient.js likely errored.");
+}
+
   const supabase = window.supabaseClient;
+  if (!supabase) {
+  console.error("Supabase client is undefined");
+  document.getElementById("msg").textContent =
+    "Internal error: Supabase not initialized.";
+  return;
+}
+
   const msg = document.getElementById("msg");
   const loginBtn = document.getElementById("loginBtn");
   const logoutBtn = document.getElementById("logoutBtn");
@@ -140,12 +154,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     setMsg("Creating account...");
 
-    const { error } = await supabase.auth.signUp({ email, password });
+   const { data, error } = await supabase.auth.signUp({ email, password });
 
-    if (error) {
-      setMsg(error.message);
-      return;
-    }
+if (error) {
+  setMsg(error.message);
+  return;
+}
+
+console.log("Signup response:", data);
+
 
     document.querySelector(".card").innerHTML = `
       <h2>Account created</h2>
